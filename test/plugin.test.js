@@ -133,3 +133,35 @@ QUnit.test('"sourcechanged" event', function(assert) {
   // to the original source? Is that event possible? Seems like it'd be worth
   // investigating at some point.
 });
+
+QUnit.test('onPerSrc() event binding', function(assert) {
+  const spy = sinon.spy();
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.onPerSrc('foo', spy);
+  this.player.trigger('foo');
+  this.player.trigger('foo');
+
+  assert.ok(spy.calledTwice, 'an onPerSrc listener is called each time the event is triggered while source is unchanged');
+
+  this.player.currentSrc = () => 'x-2.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(spy.calledTwice, 'an onPerSrc listener is not called if the event is triggered for a new source');
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(spy.calledTwice, 'restoring an old source, which had a listener does not trigger - the binding is gone');
+
+  this.player.currentSrc = () => {};
+  this.player.onPerSrc('foo', spy);
+  this.player.trigger('foo');
+
+  assert.ok(spy.calledThrice, 'an onPerSrc listener does not care if there actually is a source');
+
+  this.player.currentSrc = () => 'x-3.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(spy.calledThrice, 'but gaining a source still clears the previous listener');
+});

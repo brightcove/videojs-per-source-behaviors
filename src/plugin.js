@@ -22,6 +22,61 @@ const CHANGE_DETECT_EVENTS = [
 ];
 
 /**
+ * Bind an event on a per-source basis.
+ *
+ * @param  {String|Array|Component|Element} first
+ *         The event type(s) or target Component or Element.
+ *
+ * @param  {Function|String|Array} second
+ *         The event listener or event type(s) (when `first` is target).
+ *
+ * @param  {Function} third
+ *         The event listener (when `second` is event type(s)).
+ *
+ * @return {Player}
+ */
+const onPerSrc = function(first, second, third) {
+  const isTargetPlayer = arguments.length === 2;
+  const originalSrc = this.currentSrc();
+
+  // This array is the set of arguments to use for `on()` and `off()` methods
+  // of the player.
+  const args = [first];
+
+  // Make sure we bind here so that a GUID is set on the original listener
+  // and that it is bound to the proper context.
+  const originalListener = videojs.bind(
+    isTargetPlayer ? this : first,
+    isTargetPlayer ? second : third
+  );
+
+  // The wrapped listener `subargs` are the arguments passed to the original
+  // listener (i.e. the Event object and an additional data hash).
+  const wrappedListener = (...subargs) => {
+    if (this.currentSrc() !== originalSrc) {
+      this.off(...args);
+    } else {
+      originalListener(...subargs);
+    }
+  };
+
+  // Make sure the wrapped listener and the original listener share a GUID,
+  // so that video.js properly removes event bindings when `off()` is passed
+  // the original listener!
+  wrappedListener.guid = originalListener.guid;
+
+  // If we are targeting a different object from the player, we need to include
+  // the second argument.
+  if (!isTargetPlayer) {
+    args.push(second);
+  }
+
+  args.push(wrappedListener);
+
+  return this.on(...args);
+};
+
+/**
  * Applies per-source behaviors to a video.js Player object.
  *
  * @function perSourceBehaviors
@@ -29,6 +84,9 @@ const CHANGE_DETECT_EVENTS = [
 const perSourceBehaviors = function() {
   let cachedSrc;
   let srcChangeTimer;
+
+  // Add the per-source event binding methods to this player.
+  this.onPerSrc = onPerSrc;
 
   this.on(CHANGE_DETECT_EVENTS, (e) => {
 
