@@ -1,6 +1,7 @@
 import document from 'global/document';
 import QUnit from 'qunit';
 import sinon from 'sinon';
+import tsmlj from 'tsmlj';
 import videojs from 'video.js';
 import plugin from '../src/plugin';
 
@@ -142,26 +143,108 @@ QUnit.test('onPerSrc() event binding', function(assert) {
   this.player.trigger('foo');
   this.player.trigger('foo');
 
-  assert.ok(spy.calledTwice, 'an onPerSrc listener is called each time the event is triggered while source is unchanged');
+  assert.ok(
+    spy.calledTwice,
+    tsmlj`
+      an onPerSrc listener is called each time the event is triggered
+      while source is unchanged
+    `
+  );
 
   this.player.currentSrc = () => 'x-2.mp4';
   this.player.trigger('foo');
 
-  assert.ok(spy.calledTwice, 'an onPerSrc listener is not called if the event is triggered for a new source');
+  assert.ok(
+    spy.calledTwice,
+    tsmlj`
+      an onPerSrc listener is not called if the event is triggered for
+      a new source
+    `
+  );
 
   this.player.currentSrc = () => 'x-1.mp4';
   this.player.trigger('foo');
 
-  assert.ok(spy.calledTwice, 'restoring an old source, which had a listener does not trigger - the binding is gone');
+  assert.ok(
+    spy.calledTwice,
+    tsmlj`
+      restoring an old source, which had a listener does not trigger -
+      the binding is gone
+    `
+  );
 
   this.player.currentSrc = () => {};
   this.player.onPerSrc('foo', spy);
   this.player.trigger('foo');
 
-  assert.ok(spy.calledThrice, 'an onPerSrc listener does not care if there actually is a source');
+  assert.ok(
+    spy.calledThrice,
+    'an onPerSrc listener does not care if there actually is a source'
+  );
 
   this.player.currentSrc = () => 'x-3.mp4';
   this.player.trigger('foo');
 
-  assert.ok(spy.calledThrice, 'but gaining a source still clears the previous listener');
+  assert.ok(
+    spy.calledThrice,
+    'but gaining a source still clears the previous listener'
+  );
+});
+
+QUnit.test('onePerSrc() event binding', function(assert) {
+  const spy = sinon.spy();
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.onePerSrc('foo', spy);
+  this.player.trigger('foo');
+  this.player.trigger('foo');
+  this.player.trigger('foo');
+  this.player.trigger('foo');
+
+  assert.ok(
+    spy.calledOnce,
+    tsmlj`
+      an onePerSrc listener is called only once no matter how often the
+      event is triggered while source is unchanged
+    `
+  );
+
+  this.player.currentSrc = () => 'x-2.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(
+    spy.calledOnce,
+    tsmlj`
+      an onePerSrc listener is not called if the event is triggered for
+      a new source
+    `
+  );
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(
+    spy.calledOnce,
+    tsmlj`
+      restoring an old source, which had a listener does not trigger -
+      the binding is gone
+    `
+  );
+
+  this.player.currentSrc = () => {};
+  this.player.onePerSrc('foo', spy);
+  this.player.trigger('foo');
+
+  assert.ok(
+    spy.calledTwice,
+    'an onePerSrc listener does not care if there actually is a source'
+  );
+
+  this.player.currentSrc = () => 'x-3.mp4';
+  this.player.trigger('foo');
+
+  assert.ok(
+    spy.calledTwice,
+    'but gaining a source still clears the previous listener'
+  );
 });
