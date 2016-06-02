@@ -12,13 +12,22 @@
   </video>
   <ul>
     <li><a href="/test/">Run unit tests in browser.</a></li>
-    
+
   </ul>
   <script src="/node_modules/video.js/dist/video.js"></script>
   <script src="/dist/videojs-per-source-behaviors.js"></script>
   <script>
     (function(window, videojs) {
       var player = window.player = videojs('videojs-per-source-behaviors-player');
+
+      player.on(videojs.getTech('Html5').Events, function(e) {
+        videojs.log(e.type, ' at ', Date.now());
+      });
+
+      player.on('sourcechanged', function(e, data) {
+        videojs.log('SOURCE CHANGED!', e, data);
+      });
+
       player.perSourceBehaviors();
     }(window, window.videojs));
   </script>

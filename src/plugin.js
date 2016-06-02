@@ -1,45 +1,74 @@
 import videojs from 'video.js';
 
-// Default options for the plugin.
-const defaults = {};
+const Html5 = videojs.getTech('Html5');
 
 /**
- * Function to invoke when the player is ready.
+ * For the most part, these are the events that occur early in the lifecycle
+ * of a player, but there is considerable variability across browsers and
+ * devices (not to mention properties like autoplay and preload). As such, we
+ * listen to a bunch of events for source changes.
  *
- * This is a great place for your plugin to initialize itself. When this
- * function is called, the player will have its DOM and child components
- * in place.
- *
- * @function onPlayerReady
- * @param    {Player} player
- * @param    {Object} [options={}]
+ * @type {Array}
  */
-const onPlayerReady = (player, options) => {
-  player.addClass('vjs-per-source-behaviors');
-};
+const CHANGE_DETECT_EVENTS = [
+  'abort',
+  'canplay',
+  'emptied',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
+  'play',
+  'playing'
+];
 
 /**
- * A video.js plugin.
- *
- * In the plugin function, the value of `this` is a video.js `Player`
- * instance. You cannot rely on the player being in a "ready" state here,
- * depending on how the plugin is invoked. This may or may not be important
- * to you; if not, remove the wait for "ready"!
+ * Applies per-source behaviors to a video.js Player object.
  *
  * @function perSourceBehaviors
- * @param    {Object} [options={}]
- *           An object of options left to the plugin author to define.
  */
-const perSourceBehaviors = function(options) {
-  this.ready(() => {
-    onPlayerReady(this, videojs.mergeOptions(defaults, options));
+const perSourceBehaviors = function() {
+  let cachedSrc;
+  let srcChangeTimer;
+
+  this.on(CHANGE_DETECT_EVENTS, (e) => {
+
+    if (srcChangeTimer || !this.currentSrc()) {
+      return;
+    }
+
+    // Track any and all interim events from this one until the next tick
+    // when we evaluate the timer.
+    const interimEvents = [];
+
+    const addInterimEvent = (f) => {
+      interimEvents.push({time: Date.now(), event: f});
+    };
+
+    addInterimEvent(e);
+    this.on(Html5.Events, addInterimEvent);
+
+    srcChangeTimer = window.setTimeout(() => {
+      let currentSrc = this.currentSrc();
+
+      this.off(Html5.Events, addInterimEvent);
+      srcChangeTimer = null;
+
+      if (currentSrc && currentSrc !== cachedSrc) {
+
+        this.trigger('sourcechanged', {
+          interimEvents,
+          from: cachedSrc,
+          to: currentSrc
+        });
+
+        cachedSrc = currentSrc;
+      }
+    }, 1);
   });
+
 };
 
-// Register the plugin with video.js.
 videojs.plugin('perSourceBehaviors', perSourceBehaviors);
-
-// Include the version number.
 perSourceBehaviors.VERSION = '__VERSION__';
 
 export default perSourceBehaviors;
