@@ -128,6 +128,33 @@ QUnit.test('"sourcechanged" event', function(assert) {
   assert.strictEqual(metaData.interimEvents[2].time, 41);
   assert.strictEqual(metaData.interimEvents[2].event.type, 'loadstart');
 
+  // The "play" will trigger a listener
+  this.player.trigger('play');
+  this.player.trigger('canplay');
+  this.player.currentSrc = () => 'x-2.mp4';
+  this.player.trigger('playing');
+  this.player.trigger('loadstart');
+  this.clock.tick(10);
+
+  assert.strictEqual(
+    spy.callCount,
+    4,
+    'changing the source while a timeout was queued triggered a "sourcechanged" event'
+  );
+
+  metaData = spy.getCall(3).args[1];
+  assert.strictEqual(metaData.from, 'x-1.mp4');
+  assert.strictEqual(metaData.to, 'x-2.mp4');
+  assert.strictEqual(metaData.interimEvents.length, 4);
+  assert.strictEqual(metaData.interimEvents[0].time, 51);
+  assert.strictEqual(metaData.interimEvents[0].event.type, 'play');
+  assert.strictEqual(metaData.interimEvents[1].time, 51);
+  assert.strictEqual(metaData.interimEvents[1].event.type, 'canplay');
+  assert.strictEqual(metaData.interimEvents[2].time, 51);
+  assert.strictEqual(metaData.interimEvents[2].event.type, 'playing');
+  assert.strictEqual(metaData.interimEvents[3].time, 51);
+  assert.strictEqual(metaData.interimEvents[3].event.type, 'loadstart');
+
   // @todo
   // What can/should, if anything, we do about a situation where a source was
   // changed to a new source, but no events were fired; then it changed BACK
