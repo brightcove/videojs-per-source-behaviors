@@ -21,6 +21,14 @@ const CHANGE_DETECT_EVENTS = [
   'playing'
 ];
 
+/**
+ * Creates an event binder function of a given type.
+ *
+ * @param  {String} type
+ *         Should be "on" or "one".
+ *
+ * @return {Function}
+ */
 const createPerSrcBinder = (type) => {
   return function(first, second) {
     const isTargetPlayer = arguments.length === 2;
@@ -147,7 +155,6 @@ const perSourceBehaviors = function() {
       }
     }, 1);
   });
-
 };
 
 videojs.plugin('perSourceBehaviors', perSourceBehaviors);

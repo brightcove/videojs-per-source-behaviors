@@ -154,12 +154,6 @@ QUnit.test('"sourcechanged" event', function(assert) {
   assert.strictEqual(metaData.interimEvents[2].event.type, 'playing');
   assert.strictEqual(metaData.interimEvents[3].time, 51);
   assert.strictEqual(metaData.interimEvents[3].event.type, 'loadstart');
-
-  // @todo
-  // What can/should, if anything, we do about a situation where a source was
-  // changed to a new source, but no events were fired; then it changed BACK
-  // to the original source? Is that event possible? Seems like it'd be worth
-  // investigating at some point.
 });
 
 QUnit.test('onPerSrc() event binding', function(assert) {
