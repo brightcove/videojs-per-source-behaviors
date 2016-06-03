@@ -5,6 +5,23 @@ import tsmlj from 'tsmlj';
 import videojs from 'video.js';
 import plugin from '../src/plugin';
 
+/**
+ * Assertion for testing a subset of event data.
+ *
+ * @param  {Object} data
+ * @param  {Object} expected
+ * @param  {String} [message]
+ */
+QUnit.assert.eventDataMatches = function(data, expected, message) {
+  this.deepEqual({
+    from: data.from,
+    to: data.to,
+
+    // Convert interimEvents to extract only `time` and `type`.
+    interimEvents: data.interimEvents.map(o => ({time: o.time, type: o.event.type}))
+  }, expected, message);
+};
+
 QUnit.test('the environment is sane', function(assert) {
   assert.strictEqual(typeof Array.isArray, 'function', 'es5 exists');
   assert.strictEqual(typeof sinon, 'object', 'sinon exists');
@@ -39,7 +56,6 @@ QUnit.module('videojs-per-source-behaviors', {
 });
 
 QUnit.test('"sourcechanged" event', function(assert) {
-  let metaData;
   const spy = sinon.spy();
 
   this.player.on('sourcechanged', spy);
@@ -63,18 +79,23 @@ QUnit.test('"sourcechanged" event', function(assert) {
 
   assert.ok(spy.calledOnce, 'with a source, got a "sourcechanged" event');
 
-  metaData = spy.getCall(0).args[1];
-  assert.strictEqual(metaData.from, undefined);
-  assert.strictEqual(metaData.to, 'x-1.mp4');
-  assert.strictEqual(metaData.interimEvents.length, 4);
-  assert.strictEqual(metaData.interimEvents[0].time, 11);
-  assert.strictEqual(metaData.interimEvents[0].event.type, 'play');
-  assert.strictEqual(metaData.interimEvents[1].time, 11);
-  assert.strictEqual(metaData.interimEvents[1].event.type, 'playing');
-  assert.strictEqual(metaData.interimEvents[2].time, 11);
-  assert.strictEqual(metaData.interimEvents[2].event.type, 'loadstart');
-  assert.strictEqual(metaData.interimEvents[3].time, 11);
-  assert.strictEqual(metaData.interimEvents[3].event.type, 'canplay');
+  assert.eventDataMatches(spy.getCall(0).args[1], {
+    from: undefined,
+    to: 'x-1.mp4',
+    interimEvents: [{
+      time: 11,
+      type: 'play'
+    }, {
+      time: 11,
+      type: 'playing'
+    }, {
+      time: 11,
+      type: 'loadstart'
+    }, {
+      time: 11,
+      type: 'canplay'
+    }]
+  });
 
   this.player.trigger('pause');
   this.player.trigger('emptied');
@@ -95,16 +116,20 @@ QUnit.test('"sourcechanged" event', function(assert) {
 
   assert.ok(spy.calledTwice, 'with a new source, got a "sourcechanged" event');
 
-  metaData = spy.getCall(1).args[1];
-  assert.strictEqual(metaData.from, 'x-1.mp4');
-  assert.strictEqual(metaData.to, 'x-2.mp4');
-  assert.strictEqual(metaData.interimEvents.length, 3);
-  assert.strictEqual(metaData.interimEvents[0].time, 31);
-  assert.strictEqual(metaData.interimEvents[0].event.type, 'loadedmetadata');
-  assert.strictEqual(metaData.interimEvents[1].time, 31);
-  assert.strictEqual(metaData.interimEvents[1].event.type, 'loadeddata');
-  assert.strictEqual(metaData.interimEvents[2].time, 31);
-  assert.strictEqual(metaData.interimEvents[2].event.type, 'loadstart');
+  assert.eventDataMatches(spy.getCall(1).args[1], {
+    from: 'x-1.mp4',
+    to: 'x-2.mp4',
+    interimEvents: [{
+      time: 31,
+      type: 'loadedmetadata'
+    }, {
+      time: 31,
+      type: 'loadeddata'
+    }, {
+      time: 31,
+      type: 'loadstart'
+    }]
+  });
 
   this.player.currentSrc = () => 'x-1.mp4';
   this.player.trigger('play');
@@ -117,16 +142,20 @@ QUnit.test('"sourcechanged" event', function(assert) {
     'with a changed, but repeated, source, got a "sourcechanged" event'
   );
 
-  metaData = spy.getCall(2).args[1];
-  assert.strictEqual(metaData.from, 'x-2.mp4');
-  assert.strictEqual(metaData.to, 'x-1.mp4');
-  assert.strictEqual(metaData.interimEvents.length, 3);
-  assert.strictEqual(metaData.interimEvents[0].time, 41);
-  assert.strictEqual(metaData.interimEvents[0].event.type, 'play');
-  assert.strictEqual(metaData.interimEvents[1].time, 41);
-  assert.strictEqual(metaData.interimEvents[1].event.type, 'canplay');
-  assert.strictEqual(metaData.interimEvents[2].time, 41);
-  assert.strictEqual(metaData.interimEvents[2].event.type, 'loadstart');
+  assert.eventDataMatches(spy.getCall(2).args[1], {
+    from: 'x-2.mp4',
+    to: 'x-1.mp4',
+    interimEvents: [{
+      time: 41,
+      type: 'play'
+    }, {
+      time: 41,
+      type: 'canplay'
+    }, {
+      time: 41,
+      type: 'loadstart'
+    }]
+  });
 
   // The "play" will trigger a listener
   this.player.trigger('play');
@@ -142,18 +171,23 @@ QUnit.test('"sourcechanged" event', function(assert) {
     'changing the source while a timeout was queued triggered a "sourcechanged" event'
   );
 
-  metaData = spy.getCall(3).args[1];
-  assert.strictEqual(metaData.from, 'x-1.mp4');
-  assert.strictEqual(metaData.to, 'x-2.mp4');
-  assert.strictEqual(metaData.interimEvents.length, 4);
-  assert.strictEqual(metaData.interimEvents[0].time, 51);
-  assert.strictEqual(metaData.interimEvents[0].event.type, 'play');
-  assert.strictEqual(metaData.interimEvents[1].time, 51);
-  assert.strictEqual(metaData.interimEvents[1].event.type, 'canplay');
-  assert.strictEqual(metaData.interimEvents[2].time, 51);
-  assert.strictEqual(metaData.interimEvents[2].event.type, 'playing');
-  assert.strictEqual(metaData.interimEvents[3].time, 51);
-  assert.strictEqual(metaData.interimEvents[3].event.type, 'loadstart');
+  assert.eventDataMatches(spy.getCall(3).args[1], {
+    from: 'x-1.mp4',
+    to: 'x-2.mp4',
+    interimEvents: [{
+      time: 51,
+      type: 'play'
+    }, {
+      time: 51,
+      type: 'canplay'
+    }, {
+      time: 51,
+      type: 'playing'
+    }, {
+      time: 51,
+      type: 'loadstart'
+    }]
+  });
 });
 
 QUnit.test('onPerSrc() event binding', function(assert) {
