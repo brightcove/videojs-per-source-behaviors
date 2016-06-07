@@ -24,13 +24,22 @@ const CHANGE_DETECT_EVENTS = [
 /**
  * Creates an event binder function of a given type.
  *
- * @param  {String} type
- *         Should be "on" or "one".
+ * @param  {Boolean} isOne
+ *         Rather than delegating to the player's `one()` method, we want to
+ *         retain full control over when the listener is unbound (particularly
+ *         due to the ability for per-source behaviors to be toggled on and
+ *         off at will).
  *
  * @return {Function}
  */
-const createPerSrcBinder = (type) => {
+const createPerSrcBinder = (isOne) => {
   return function(first, second) {
+
+    // Do not bind new listeners when per-source behaviors are disabled.
+    if (this.perSourceBehaviors.disabled()) {
+      return;
+    }
+
     const isTargetPlayer = arguments.length === 2;
     const originalSrc = this.currentSrc();
 
@@ -48,9 +57,18 @@ const createPerSrcBinder = (type) => {
     // The wrapped listener `subargs` are the arguments passed to the original
     // listener (i.e. the Event object and an additional data hash).
     const wrappedListener = (...subargs) => {
-      if (this.currentSrc() !== originalSrc) {
+      const changed = this.currentSrc() !== originalSrc;
+
+      // Do not evaluate listeners if per-source behaviors are disabled.
+      if (this.perSourceBehaviors.disabled()) {
+        return;
+      }
+
+      if (changed || isOne) {
         this.off(...args);
-      } else {
+      }
+
+      if (!changed) {
         originalListener(...subargs);
       }
     };
@@ -68,7 +86,7 @@ const createPerSrcBinder = (type) => {
 
     args.push(wrappedListener);
 
-    return this[type](...args);
+    return this.on(...args);
   };
 };
 
@@ -87,7 +105,7 @@ const createPerSrcBinder = (type) => {
  *
  * @return {Player}
  */
-const onPerSrc = createPerSrcBinder('on');
+const onPerSrc = createPerSrcBinder();
 
 /**
  * Bind an event listener on a per-source basis. This listener can only
@@ -105,7 +123,7 @@ const onPerSrc = createPerSrcBinder('on');
  *
  * @return {Player}
  */
-const onePerSrc = createPerSrcBinder('one');
+const onePerSrc = createPerSrcBinder(true);
 
 /**
  * Applies per-source behaviors to a video.js Player object.
@@ -114,7 +132,30 @@ const onePerSrc = createPerSrcBinder('one');
  */
 const perSourceBehaviors = function() {
   let cachedSrc;
+  let disabled = false;
   let srcChangeTimer;
+
+  this.perSourceBehaviors = {
+
+    /**
+     * Get/set whether per-source behaviors are disabled on this player.
+     *
+     * @param  {Boolean} [value]
+     * @return {Boolean}
+     */
+    disabled(value) {
+      if (value !== undefined) {
+        disabled = !!value;
+        if (disabled) {
+          window.clearTimeout(srcChangeTimer);
+          srcChangeTimer = null;
+        }
+      }
+      return disabled;
+    },
+
+    VERSION: '__VERSION__'
+  };
 
   // Add the per-source event binding methods to this player.
   this.onPerSrc = onPerSrc;
@@ -122,7 +163,7 @@ const perSourceBehaviors = function() {
 
   this.on(CHANGE_DETECT_EVENTS, (e) => {
 
-    if (srcChangeTimer || !this.currentSrc()) {
+    if (this.perSourceBehaviors.disabled() || srcChangeTimer || !this.currentSrc()) {
       return;
     }
 
