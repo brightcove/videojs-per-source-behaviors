@@ -22,6 +22,19 @@ const CHANGE_DETECT_EVENTS = [
 ];
 
 /**
+ * Whether or not the player is in an ad state. Ideally, this function would
+ * not need to exist, but hooks provided by contrib-ads are not sufficient to
+ * cover all conditions at this time.
+ *
+ * Additionally, it'd be preferable to not have to read from the DOM and have
+ * external code simply disable/enable "sourcechanged" detection when entering
+ * or leaving an ad state.
+ *
+ * @return {Boolean}
+ */
+const isInAdPlayback = (p) => p.hasClass('vjs-ad-loading') || p.hasClass('vjs-ad-playing');
+
+/**
  * Creates an event binder function of a given type.
  *
  * @param  {Boolean} isOne
@@ -163,7 +176,12 @@ const perSourceBehaviors = function() {
 
   this.on(CHANGE_DETECT_EVENTS, (e) => {
 
-    if (this.perSourceBehaviors.disabled() || srcChangeTimer || !this.currentSrc()) {
+    if (
+      this.perSourceBehaviors.disabled() ||
+      srcChangeTimer ||
+      !this.currentSrc() ||
+      isInAdPlayback(this)
+    ) {
       return;
     }
 

@@ -239,6 +239,26 @@ QUnit.test('"sourcechanged" event', function(assert) {
       type: 'playing'
     }]
   });
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.addClass('vjs-ad-loading');
+  this.player.trigger('loadstart');
+  this.clock.tick(10);
+
+  assert.strictEqual(spy.callCount, 5, tsmlj`
+    changing the source with the vjs-ad-loading class on the player does NOT
+    trigger the "sourcechanged" event
+  `);
+
+  this.player.removeClass('vjs-ad-loading');
+  this.player.addClass('vjs-ad-playing');
+  this.player.trigger('play');
+  this.clock.tick(10);
+
+  assert.strictEqual(spy.callCount, 5, tsmlj`
+    changing the source with the vjs-ad-playing class on the player does NOT
+    trigger the "sourcechanged" event
+  `);
 });
 
 QUnit.test('onPerSrc() event binding', function(assert) {
