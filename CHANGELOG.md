@@ -2,16 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Added `"sourcechanged"` event to a video.js player.
+* Added `onPerSrc()` and `onePerSrc()` methods to a video.js player.
 
 --------------------
-
-## 1.0.0-2 (2016-06-15)
-_(none)_
-
-## 1.0.0-1 (2016-06-07)
-_(none)_
-
-## 1.0.0-0 (2016-06-03)
-_(none)_
-
