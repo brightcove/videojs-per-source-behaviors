@@ -76,8 +76,8 @@ An object with the following properties is passed along with `"sourcechanged"` e
 - `from`: The source URL _before_ the event.
 - `to`: The source URL _after_ the event (and currently).
 - `interimEvents`: An array of _all_ the events that occurred in the player between the event that triggered the check to the last event that fired before the call stack cleared. 
-  
-##### Schema
+
+Put another way, the object follows the following schema:
 
 ```js
 {
@@ -98,13 +98,9 @@ The `onPerSrc()` method has the same behavior as `on()` with the crucial excepti
 
 The `onePerSrc()` method has the same behavior as `onPerSrc()` except that it can only be called _once_.
 
-### `player.perSourceBehaviors.disabled([value])`
+### `player.perSourceBehaviors.disable()`/`player.perSourceBehaviors.enable()`
 
-Get/set whether or not per-source behaviors are enabled on the player.
-
-Calling `player.perSourceBehaviors.disabled()` will return a `Boolean` indicating the disabled/enabled state of per-source behaviors.
-
-Providing any `value` other than `undefined` will update the disabled/enabled state of per-source behaviors by casting the `value` to a `Boolean`.
+These methods will disable and enable (respectively) the per-source behaviors on this player.
 
 This is useful in more complex use-cases where you might want to manipulate the player state without triggering per-source behaviors. A good example of this might be advertising playback.
 
@@ -113,6 +109,10 @@ This is useful in more complex use-cases where you might want to manipulate the 
 - The `"sourcechanged"` event will not be fired even if the source changes.
 - Any `onPerSrc()`/`onePerSrc()` listeners will not be called.
 - Binding new `onPerSrc()`/`onePerSrc()` listeners will be prevented.
+
+### `player.perSourceBehaviors.disabled()`/`player.perSourceBehaviors.enabled()`
+
+Use these methods to inspect the current enabled/disabled state of the player as pertains to per-source behaviors. Both return a `Boolean`.
 
 ### `player.perSourceBehaviors.VERSION`
 

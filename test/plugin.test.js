@@ -55,15 +55,15 @@ QUnit.module('videojs-per-source-behaviors', {
   }
 });
 
-QUnit.test('disabled()', function(assert) {
+QUnit.test('disable(), disabled(), enable()', function(assert) {
   let psb = this.player.perSourceBehaviors;
 
   assert.notOk(psb.disabled(), 'by default, per-source behaviors are not disabled');
 
-  psb.disabled(true);
+  psb.disable();
   assert.ok(psb.disabled(), 'per-source behaviors can be disabled');
 
-  psb.disabled(false);
+  psb.enable();
   assert.notOk(psb.disabled(), 'per-source behaviors can be enabled');
 });
 
@@ -198,7 +198,7 @@ QUnit.test('"sourcechanged" event', function(assert) {
     }]
   });
 
-  this.player.perSourceBehaviors.disabled(true);
+  this.player.perSourceBehaviors.disable();
   this.player.currentSrc = () => 'x-1.mp4';
   this.player.trigger('loadedmetadata');
   this.player.trigger('loadeddata');
@@ -210,7 +210,7 @@ QUnit.test('"sourcechanged" event', function(assert) {
     trigger a "sourcechanged" event
   `);
 
-  this.player.perSourceBehaviors.disabled(false);
+  this.player.perSourceBehaviors.enable();
   this.player.trigger('play');
   this.player.trigger('loadstart');
   this.player.trigger('canplay');
@@ -308,14 +308,14 @@ QUnit.test('onPerSrc() event binding', function(assert) {
   // Bind a new onPerSrc listener for the latest source, then disable per-
   // source behaviors.
   this.player.onPerSrc('foo', spy);
-  this.player.perSourceBehaviors.disabled(true);
+  this.player.perSourceBehaviors.disable();
   this.player.trigger('foo');
 
   assert.strictEqual(spy.callCount, 3, tsmlj`
     when per-source behaviors are disabled, listeners are not triggered
   `);
 
-  this.player.perSourceBehaviors.disabled(false);
+  this.player.perSourceBehaviors.enable();
   this.player.trigger('foo');
 
   assert.strictEqual(spy.callCount, 4, tsmlj`
@@ -372,14 +372,14 @@ QUnit.test('onePerSrc() event binding', function(assert) {
   // Bind a new onePerSrc listener for the latest source, then disable per-
   // source behaviors.
   this.player.onePerSrc('foo', spy);
-  this.player.perSourceBehaviors.disabled(true);
+  this.player.perSourceBehaviors.disable();
   this.player.trigger('foo');
 
   assert.strictEqual(spy.callCount, 2, tsmlj`
     when per-source behaviors are disabled, listeners are not triggered
   `);
 
-  this.player.perSourceBehaviors.disabled(false);
+  this.player.perSourceBehaviors.enable();
   this.player.trigger('foo');
 
   assert.strictEqual(spy.callCount, 3, tsmlj`

@@ -151,20 +151,43 @@ const perSourceBehaviors = function() {
   this.perSourceBehaviors = {
 
     /**
-     * Get/set whether per-source behaviors are disabled on this player.
+     * Disable per-source behaviors on this player.
      *
-     * @param  {Boolean} [value]
      * @return {Boolean}
      */
-    disabled(value) {
-      if (value !== undefined) {
-        disabled = !!value;
-        if (disabled) {
-          window.clearTimeout(srcChangeTimer);
-          srcChangeTimer = null;
-        }
-      }
+    disable() {
+      window.clearTimeout(srcChangeTimer);
+      srcChangeTimer = null;
+      disabled = true;
       return disabled;
+    },
+
+    /**
+     * Whether per-source behaviors are disabled on this player.
+     *
+     * @return {Boolean}
+     */
+    disabled() {
+      return disabled;
+    },
+
+    /**
+     * Enable per-source behaviors on this player.
+     *
+     * @return {Boolean}
+     */
+    enable() {
+      disabled = false;
+      return disabled;
+    },
+
+    /**
+     * Whether per-source behaviors are disabled on this player.
+     *
+     * @return {Boolean}
+     */
+    enabled() {
+      return !disabled;
     },
 
     VERSION: '__VERSION__'
