@@ -4,7 +4,7 @@ const Html5 = videojs.getTech('Html5');
 
 /**
  * For the most part, these are the events that occur early in the lifecycle
- * of a player, but there is considerable variability across browsers and
+ * of a source, but there is considerable variability across browsers and
  * devices (not to mention properties like autoplay and preload). As such, we
  * listen to a bunch of events for source changes.
  *
@@ -22,17 +22,26 @@ const CHANGE_DETECT_EVENTS = [
 ];
 
 /**
+ * These are the ad loading and playback states we care about.
+ *
+ * @type {Array}
+ */
+const AD_STATES = [
+  'ad-playback',
+  'ads-ready',
+  'postroll?',
+  'preroll?'
+];
+
+/**
  * Whether or not the player is in an ad state. Ideally, this function would
  * not need to exist, but hooks provided by contrib-ads are not sufficient to
  * cover all conditions at this time.
  *
- * Additionally, it'd be preferable to not have to read from the DOM and have
- * external code simply disable/enable "sourcechanged" detection when entering
- * or leaving an ad state.
- *
  * @return {Boolean}
  */
-const isInAdPlayback = (p) => p.hasClass('vjs-ad-loading') || p.hasClass('vjs-ad-playing');
+const isInAdPlayback = (p) =>
+  !!p.ads && typeof p.ads === 'object' && AD_STATES.indexOf(p.ads.state) > -1;
 
 /**
  * Creates an event binder function of a given type.
