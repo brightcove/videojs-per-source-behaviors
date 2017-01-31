@@ -67,6 +67,28 @@ QUnit.test('disable(), disabled(), enable()', function(assert) {
   assert.notOk(psb.disabled(), 'per-source behaviors can be enabled');
 });
 
+QUnit.test('"sourceunstable" event', function(assert) {
+  const spy = sinon.spy();
+
+  this.player.on('sourceunstable', spy);
+  this.player.trigger('abort');
+
+  // For each assertion, tick 10ms to be sure multiple timeouts do not happen!
+  this.clock.tick(10);
+  assert.strictEqual(spy.callCount, 1, '"sourceunstable" events can be triggered by "abort"');
+
+  this.player.trigger('emptied');
+  this.clock.tick(10);
+  assert.strictEqual(spy.callCount, 2, '"sourceunstable" events can be triggered by "emptied"');
+
+  this.player.trigger('abort');
+  this.player.trigger('emptied');
+  this.player.trigger('abort');
+  this.player.trigger('emptied');
+  this.clock.tick(10);
+  assert.strictEqual(spy.callCount, 3, '"sourceunstable" events will only trigger once during a stack');
+});
+
 QUnit.test('"sourcechanged" event', function(assert) {
   const spy = sinon.spy();
 
@@ -120,9 +142,9 @@ QUnit.test('"sourcechanged" event', function(assert) {
   `);
 
   this.player.currentSrc = () => 'x-2.mp4';
+  this.player.trigger('loadstart');
   this.player.trigger('loadedmetadata');
   this.player.trigger('loadeddata');
-  this.player.trigger('loadstart');
   this.clock.tick(10);
 
   assert.strictEqual(spy.callCount, 2, 'with a new source, got a "sourcechanged" event');
@@ -132,13 +154,13 @@ QUnit.test('"sourcechanged" event', function(assert) {
     to: 'x-2.mp4',
     interimEvents: [{
       time: 31,
+      type: 'loadstart'
+    }, {
+      time: 31,
       type: 'loadedmetadata'
     }, {
       time: 31,
       type: 'loadeddata'
-    }, {
-      time: 31,
-      type: 'loadstart'
     }]
   });
 

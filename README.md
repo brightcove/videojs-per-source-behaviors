@@ -2,6 +2,16 @@
 
 A video.js plugin for enhancing a player with behaviors related to changing media sources.
 
+## Why?
+
+Detecting when the media source of a player has changed or is about to change is an inexact operation because the resource selection algorithm is asynchronous.
+
+For the most part, Video.js users will be familiar with using the `Player#src()` method to change the source of the player. One might wonder why we don't simply trigger an event from that function to signal that the source is going to change.
+
+The problem with that is that `src()` is not the only way to change the source. The underlying `<video>` element has multiple methods of changing the source as well and we aim to support those here.
+
+This plugin provides events and other tools that aim to make that uncertainty a little less daunting.
+
 ## Installation
 
 ```sh
@@ -65,13 +75,19 @@ require(['video.js', 'videojs-per-source-behaviors'], function(videojs) {
 
 Once the plugin is invoked on a player - by calling `player.perSourceBehaviors()` - it begins firing a new event, gains two new methods, and replaces `perSourceBehaviors` with an object.
 
-### `"sourcechanged"` Event
+### `sourceunstable` Event
 
-The `"sourcechanged"` event will be fired once the call stack is cleared after the first of [a subset][subset-events] of standard [`HTMLMediaElement` events][standard-events] is encountered where the `currentSrc()` returned by the player has changed.
+The `sourceunstable` event will be fired when the plugin detects a condition that suggests the video player is in the process of changing sources, but that it's too early to know what the new source is or will be.
+
+This is not a guarantee that the source will even change, but it's close - and one of the goals of this project is to continually improve this detection.
+
+### `sourcechanged` Event
+
+The `sourcechanged` event will be fired once the call stack is cleared after the first of a subset of standard [`HTMLMediaElement` events][standard-events] is encountered where the `currentSrc()` returned by the player has changed from the previously cached value.
 
 #### Extra Event Data
 
-An object with the following properties is passed along with `"sourcechanged"` events as the second argument to any listeners:
+An object with the following properties is passed along with `sourcechanged` events as the second argument to any listeners:
 
 - `from`: The source URL _before_ the event.
 - `to`: The source URL _after_ the event (and currently).
@@ -106,7 +122,7 @@ This is useful in more complex use-cases where you might want to manipulate the 
 
 #### What happens when per-source behaviors are disabled?
 
-- The `"sourcechanged"` event will not be fired even if the source changes.
+- The `sourcechanged` event will not be fired even if the source changes.
 - Any `onPerSrc()`/`onePerSrc()` listeners will not be called.
 - Binding new `onPerSrc()`/`onePerSrc()` listeners will be prevented.
 
@@ -124,5 +140,4 @@ Apache-2.0. Copyright (c) Brightcove, Inc.
 
 
 [standard-events]: https://www.w3.org/TR/html5/embedded-content-0.html#mediaevents
-[subset-events]: https://github.com/brightcove/videojs-per-source-behaviors/blob/master/src/plugin.js#L13
 [videojs]: http://videojs.com/

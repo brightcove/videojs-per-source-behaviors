@@ -4,7 +4,7 @@ const Html5 = videojs.getTech('Html5');
 
 /**
  * For the most part, these are the events that occur early in the lifecycle
- * of a player, but there is considerable variability across browsers and
+ * of a source, but there is considerable variability across browsers and
  * devices (not to mention properties like autoplay and preload). As such, we
  * listen to a bunch of events for source changes.
  *
@@ -12,13 +12,32 @@ const Html5 = videojs.getTech('Html5');
  */
 const CHANGE_DETECT_EVENTS = [
   'abort',
-  'canplay',
   'emptied',
-  'loadeddata',
-  'loadedmetadata',
   'loadstart',
-  'play',
-  'playing'
+  'play'
+];
+
+/**
+ * These events will indicate that the source is "unstable" (i.e. it might be
+ * about to change).
+ *
+ * @type {Array}
+ */
+const UNSTABLE_EVENTS = [
+  'abort',
+  'emptied'
+];
+
+/**
+ * These are the ad loading and playback states we care about.
+ *
+ * @type {Array}
+ */
+const AD_STATES = [
+  'ad-playback',
+  'ads-ready',
+  'postroll?',
+  'preroll?'
 ];
 
 /**
@@ -26,13 +45,10 @@ const CHANGE_DETECT_EVENTS = [
  * not need to exist, but hooks provided by contrib-ads are not sufficient to
  * cover all conditions at this time.
  *
- * Additionally, it'd be preferable to not have to read from the DOM and have
- * external code simply disable/enable "sourcechanged" detection when entering
- * or leaving an ad state.
- *
  * @return {Boolean}
  */
-const isInAdPlayback = (p) => p.hasClass('vjs-ad-loading') || p.hasClass('vjs-ad-playing');
+const isInAdPlayback = (p) =>
+  !!p.ads && typeof p.ads === 'object' && AD_STATES.indexOf(p.ads.state) > -1;
 
 /**
  * Creates an event binder function of a given type.
@@ -147,6 +163,7 @@ const perSourceBehaviors = function() {
   let cachedSrc;
   let disabled = false;
   let srcChangeTimer;
+  let srcStable = true;
 
   this.perSourceBehaviors = {
 
@@ -190,6 +207,16 @@ const perSourceBehaviors = function() {
       return !disabled;
     },
 
+    /**
+     * Whether or not the source is "stable". This will return `true` if the
+     * plugin feels that we may be about to change sources.
+     *
+     * @return {Boolean}
+     */
+    isSrcStable() {
+      return srcStable;
+    },
+
     VERSION: '__VERSION__'
   };
 
@@ -199,31 +226,44 @@ const perSourceBehaviors = function() {
 
   this.on(CHANGE_DETECT_EVENTS, (e) => {
 
+    // Bail-out conditions.
     if (
       this.perSourceBehaviors.disabled() ||
       srcChangeTimer ||
-      !this.currentSrc() ||
       isInAdPlayback(this)
     ) {
       return;
+    }
+
+    // If we did not previously detect that we were in an unstable state and
+    // this was an event that qualifies as unstable, do that now. In the future,
+    // we may want to restrict the conditions under which this is triggered by
+    // checking networkState and/or readyState for reasonable values such as
+    // NETWORK_NO_SOURCE and HAVE_NOTHING.
+    if (
+      srcStable &&
+      UNSTABLE_EVENTS.indexOf(e.type) > -1
+    ) {
+      srcStable = false;
+      this.trigger('sourceunstable');
     }
 
     // Track any and all interim events from this one until the next tick
     // when we evaluate the timer.
     const interimEvents = [];
 
-    const addInterimEvent = (f) => {
+    const addInterimEvent = (f) =>
       interimEvents.push({time: Date.now(), event: f});
-    };
 
     addInterimEvent(e);
     this.on(Html5.Events, addInterimEvent);
 
-    srcChangeTimer = window.setTimeout(() => {
+    srcChangeTimer = this.setTimeout(() => {
       let currentSrc = this.currentSrc();
 
-      this.off(Html5.Events, addInterimEvent);
+      srcStable = true;
       srcChangeTimer = null;
+      this.off(Html5.Events, addInterimEvent);
 
       if (currentSrc && currentSrc !== cachedSrc) {
 

@@ -6,10 +6,10 @@
   <link href="/node_modules/video.js/dist/video-js.css" rel="stylesheet">
 </head>
 <body>
-  <video id="videojs-per-source-behaviors-player" class="video-js vjs-default-skin" controls>
-    <source src="//vjs.zencdn.net/v/oceans.mp4" type='video/mp4'>
-    <source src="//vjs.zencdn.net/v/oceans.webm" type='video/webm'>
-  </video>
+  <video id="videojs-per-source-behaviors-player" class="video-js" controls></video>
+  <p>
+    <button id="change-source">Change the Source</button>
+  </p>
   <ul>
     <li><a href="/test/">Run unit tests in browser.</a></li>
   </ul>
@@ -17,17 +17,79 @@
   <script src="/dist/videojs-per-source-behaviors.js"></script>
   <script>
     (function(window, videojs) {
+      console.log('to view the current state, call `console.table(playerEvents);`');
+
       var player = window.player = videojs('videojs-per-source-behaviors-player');
 
+      var sources = [
+        'https://vjs.zencdn.net/v/oceans.mp4',
+        'https://archive.org/download/ElephantsDream/ed_hd.mp4',
+        'https://archive.org/download/Sintel/sintel-2048-stereo_512kb.mp4'
+      ];
+
+      var currentSource = 0;
+
+      var networkStates = [
+        'NETWORK_EMPTY',
+        'NETWORK_IDLE',
+        'NETWORK_LOADING',
+        'NETWORK_NO_SOURCE'
+      ];
+
+      var readyStates = [
+        'HAVE_NOTHING',
+        'HAVE_METADATA',
+        'HAVE_CURRENT_DATA',
+        'HAVE_FUTURE_DATA',
+        'HAVE_ENOUGH_DATA'
+      ];
+
+      var playerEvents = window.playerEvents = [];
+
       player.on(videojs.getTech('Html5').Events, function(e) {
-        videojs.log(e.type, ' at ', Date.now());
+        videojs.log(e.type + ' at ' + Date.now());
+        playerEvents.push({
+          networkState: networkStates[player.networkState()],
+          readyState: readyStates[player.readyState()],
+          time: Date.now(),
+          type: e.type
+        });
       });
 
-      player.on('sourcechanged', function(e, data) {
-        videojs.log('SOURCE CHANGED!', e, data);
+      player.on(['sourceunstable', 'sourcechanged'], function(e, data) {
+        videojs.log(e.type.toUpperCase() + ' at ' + Date.now());
+        playerEvents.push({
+          data: data,
+          networkState: networkStates[player.networkState()],
+          readyState: readyStates[player.readyState()],
+          time: Date.now(),
+          type: e.type
+        });
       });
 
       player.perSourceBehaviors();
+
+      player.src(sources[currentSource]);
+
+      var changeSourceBtn = document.getElementById('change-source');
+
+      changeSourceBtn.addEventListener('click', function(e) {
+        var wasPlaying = !player.paused();
+
+        e.preventDefault();
+        currentSource++;
+
+        if (currentSource === sources.length) {
+          currentSource = 0;
+        }
+
+        videojs.log('about to change the source');
+        player.src(sources[currentSource]);
+
+        if (wasPlaying) {
+          player.play();
+        }
+      });
     }(window, window.videojs));
   </script>
 </body>
