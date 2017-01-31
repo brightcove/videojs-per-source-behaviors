@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Added `"sourceunstable"` event.
+_(none)_
 
 --------------------
+
+## 1.1.0 (2017-01-31)
+* Added `"sourceunstable"` event.
 
 ## 1.0.0 (2016-06-21)
 * Added `"sourcechanged"` event to a video.js player.
