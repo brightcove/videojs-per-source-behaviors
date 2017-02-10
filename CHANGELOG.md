@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Video.js 5/6 cross-compatibility.
+_(none)_
 
 --------------------
+
+## 1.1.1 (2017-02-10)
+* Video.js 5/6 cross-compatibility.
 
 ## 1.1.0 (2017-01-31)
 * Added `"sourceunstable"` event.
