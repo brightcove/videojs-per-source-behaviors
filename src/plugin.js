@@ -2,6 +2,9 @@ import videojs from 'video.js';
 
 const Html5 = videojs.getTech('Html5');
 
+// Video.js 5/6 cross-compatibility.
+const registerPlugin = videojs.registerPlugin || videojs.plugin;
+
 /**
  * For the most part, these are the events that occur early in the lifecycle
  * of a source, but there is considerable variability across browsers and
@@ -279,7 +282,7 @@ const perSourceBehaviors = function() {
   });
 };
 
-videojs.plugin('perSourceBehaviors', perSourceBehaviors);
+registerPlugin('perSourceBehaviors', perSourceBehaviors);
 perSourceBehaviors.VERSION = '__VERSION__';
 
 export default perSourceBehaviors;
