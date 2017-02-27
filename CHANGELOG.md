@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Remove per-src listeners when we know the source changed.
 
 --------------------
 
