@@ -142,12 +142,12 @@ const perSourceBehaviors = function() {
      *
      * @return {Boolean}
      */
-    disable() {
-      window.clearTimeout(srcChangeTimer);
+    disable: videojs.bind(this, function disable() {
+      this.clearTimeout(srcChangeTimer);
       srcChangeTimer = null;
       disabled = true;
       return disabled;
-    },
+    }),
 
     /**
      * Whether per-source behaviors are disabled on this player.
