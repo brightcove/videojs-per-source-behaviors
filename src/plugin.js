@@ -225,6 +225,11 @@ const perSourceBehaviors = function() {
    */
   this.onePerSrc = createPerSrcBinder(true);
 
+  // Clear out perSrcListeners cache on player dispose.
+  this.on('dispose', () => {
+    perSrcListeners.length = 0;
+  });
+
   this.on(CHANGE_DETECT_EVENTS, (e) => {
 
     // Bail-out conditions.
