@@ -408,3 +408,21 @@ QUnit.test('onePerSrc() event binding', function(assert) {
     when per-source behaviors are re-enabled, listeners are triggered
   `);
 });
+
+QUnit.test('"sourcechanged" removes per-source listeners', function(assert) {
+  const spy = sinon.spy();
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.onPerSrc('foo', spy);
+  this.player.onePerSrc('foo', spy);
+
+  // Cause a "sourcechanged" event to trigger. This won't work by simply
+  // triggering the event. It needs to happen before the event.
+  this.player.currentSrc = () => 'x-2.mp4';
+  this.player.trigger('loadstart');
+  this.clock.tick(10);
+
+  this.player.trigger('foo');
+
+  assert.strictEqual(spy.callCount, 0, 'per source listeners were not called');
+});
