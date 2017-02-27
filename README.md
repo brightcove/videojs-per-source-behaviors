@@ -110,6 +110,8 @@ Put another way, the object follows the following schema:
 
 The `onPerSrc()` method has the same behavior as `on()` with the crucial exception that it will unbind itself if the listener is ever called with a different source than when it was bound.
 
+Additionally, these listeners will be removed immediately before the plugin triggers a `sourcechanged` event. This is done because one of the core use-cases is adding new per-source listeners on the `sourcechanged` event and there is a chance they can double-up otherwise.
+
 ### `player.onePerSrc()`
 
 The `onePerSrc()` method has the same behavior as `onPerSrc()` except that it can only be called _once_.
