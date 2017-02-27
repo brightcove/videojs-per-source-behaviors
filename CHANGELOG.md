@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Remove per-src listeners when we know the source changed.
+_(none)_
 
 --------------------
+
+## 1.1.2 (2017-02-27)
+* Remove per-src listeners when we know the source changed.
 
 ## 1.1.1 (2017-02-10)
 * Video.js 5/6 cross-compatibility.
