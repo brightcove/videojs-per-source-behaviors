@@ -85,6 +85,16 @@ This is not a guarantee that the source will even change, but it's close - and o
 
 The `sourcechanged` event will be fired once the call stack is cleared after the first of a subset of standard [`HTMLMediaElement` events][standard-events] is encountered where the `currentSrc()` returned by the player has changed from the previously cached value.
 
+| previous src | current src | ad state | triggered? |
+|:------------:|:-----------:|:--------:|:----------:|
+| null | foo.mp4 | :x: | :question: |
+| null | ad.mp4 | :white_check_mark: | :x: |
+| foo.mp4 | foo.mp4 | :x: | :x: |
+| foo.mp4 | foo.mp4 | :white_check_mark: | :x: |
+| foo.mp4 | bar.mp4 | :x: | :white_check_mark: |
+| foo.mp4 | ad.mp4 | :white_check_mark: | :x: |
+| ad.mp4 | foo.mp4 | :white_check_mark: | :x: |
+
 #### Extra Event Data
 
 An object with the following properties is passed along with `sourcechanged` events as the second argument to any listeners:
