@@ -87,6 +87,7 @@ The `sourcechanged` event will be fired once the call stack is cleared after the
 
 | previous src | current src | ad state | triggered? |
 |:------------:|:-----------:|:--------:|:----------:|
+| null | null | :x: | :x: |
 | null | foo.mp4 | :x: | :question: |
 | null | ad.mp4 | :white_check_mark: | :x: |
 | foo.mp4 | foo.mp4 | :x: | :x: |
