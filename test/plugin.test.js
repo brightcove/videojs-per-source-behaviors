@@ -75,18 +75,30 @@ QUnit.test('"sourceunstable" event', function(assert) {
 
   // For each assertion, tick 10ms to be sure multiple timeouts do not happen!
   this.clock.tick(10);
-  assert.strictEqual(spy.callCount, 1, '"sourceunstable" events can be triggered by "abort"');
+  assert.strictEqual(
+    spy.callCount,
+    1,
+    '"sourceunstable" events can be triggered by "abort"'
+  );
 
   this.player.trigger('emptied');
   this.clock.tick(10);
-  assert.strictEqual(spy.callCount, 2, '"sourceunstable" events can be triggered by "emptied"');
+  assert.strictEqual(
+    spy.callCount,
+    2,
+    '"sourceunstable" events can be triggered by "emptied"'
+  );
 
   this.player.trigger('abort');
   this.player.trigger('emptied');
   this.player.trigger('abort');
   this.player.trigger('emptied');
   this.clock.tick(10);
-  assert.strictEqual(spy.callCount, 3, '"sourceunstable" events will only trigger once during a stack');
+  assert.strictEqual(
+    spy.callCount,
+    3,
+    '"sourceunstable" events will only trigger once during a stack'
+  );
 });
 
 QUnit.test('"sourcechanged" event', function(assert) {
