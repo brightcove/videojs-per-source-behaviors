@@ -1,7 +1,6 @@
 import document from 'global/document';
 import QUnit from 'qunit';
 import sinon from 'sinon';
-import tsmlj from 'tsmlj';
 import videojs from 'video.js';
 import plugin from '../src/plugin';
 
