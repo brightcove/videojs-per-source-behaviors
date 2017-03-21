@@ -93,6 +93,7 @@ The `sourcechanged` event will be fired once the call stack is cleared after the
 | foo.mp4 | foo.mp4 | :x: | :x: |
 | foo.mp4 | foo.mp4 | :white_check_mark: | :x: |
 | foo.mp4 | bar.mp4 | :x: | :white_check_mark: |
+| foo.mp4 | bar.mp4 | :white_check_mark: | :x: |
 | foo.mp4 | ad.mp4 | :white_check_mark: | :x: |
 | ad.mp4 | foo.mp4 | :white_check_mark: | :x: |
 
