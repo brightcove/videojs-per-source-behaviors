@@ -2,9 +2,12 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-* Remove `"ads-ready"` from list of considered ad states.
+_(none)_
 
 --------------------
+
+## 1.1.3 (2017-03-23)
+* Remove `"ads-ready"` from list of considered ad states.
 
 ## 1.1.2 (2017-02-27)
 * Remove per-src listeners when we know the source changed.
