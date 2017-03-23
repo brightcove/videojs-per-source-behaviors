@@ -2,7 +2,7 @@ CHANGELOG
 =========
 
 ## HEAD (Unreleased)
-_(none)_
+* Remove `"ads-ready"` from list of considered ad states.
 
 --------------------
 
