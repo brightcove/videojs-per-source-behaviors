@@ -3,7 +3,7 @@ import QUnit from 'qunit';
 import sinon from 'sinon';
 import tsmlj from 'tsmlj';
 import videojs from 'video.js';
-import plugin from '../src/plugin';
+import plugin from '../src/js';
 
 /**
  * Assertion for testing a subset of event data.
@@ -56,7 +56,7 @@ QUnit.module('videojs-per-source-behaviors', {
 });
 
 QUnit.test('disable(), disabled(), enable()', function(assert) {
-  let psb = this.player.perSourceBehaviors;
+  const psb = this.player.perSourceBehaviors;
 
   assert.notOk(psb.disabled(), 'by default, per-source behaviors are not disabled');
 
