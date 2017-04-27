@@ -6,6 +6,9 @@ _(none)_
 
 --------------------
 
+## 1.1.4 (2017-04-27)
+_(none)_
+
 ## 1.1.3 (2017-03-23)
 * Remove `"ads-ready"` from list of considered ad states.
 

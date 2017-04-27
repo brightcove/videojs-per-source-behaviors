@@ -1,6 +1,6 @@
 {
   "name": "videojs-per-source-behaviors",
-  "version": "1.1.3",
+  "version": "1.1.4",
   "description": "A Video.js plugin for enhancing a player with behaviors related to changing media sources.",
   "main": "build/es5/index.js",
   "scripts": {
