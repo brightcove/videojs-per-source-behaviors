@@ -38,6 +38,7 @@ const UNSTABLE_EVENTS = [
  */
 const AD_STATES = [
   'ad-playback',
+  'ads-ready?',
   'postroll?',
   'preroll?'
 ];
