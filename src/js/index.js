@@ -44,8 +44,6 @@ const AD_STATES = [
 
 /**
  * Applies per-source behaviors to a video.js Player object.
- *
- * @function perSourceBehaviors
  */
 const perSourceBehaviors = function() {
   const perSrcListeners = [];
@@ -59,7 +57,8 @@ const perSourceBehaviors = function() {
    * not need to exist, but hooks provided by contrib-ads are not sufficient to
    * cover all conditions at this time.
    *
-   * @return {Boolean}
+   * @return {boolean}
+   *         whether the player is in an ad state or not
    */
   const isInAdPlayback = () =>
     !!this.ads && typeof this.ads === 'object' && AD_STATES.indexOf(this.ads.state) > -1;
@@ -67,13 +66,14 @@ const perSourceBehaviors = function() {
   /**
    * Creates an event binder function of a given type.
    *
-   * @param  {Boolean} isOne
+   * @param  {boolean} isOne
    *         Rather than delegating to the player's `one()` method, we want to
    *         retain full control over when the listener is unbound (particularly
    *         due to the ability for per-source behaviors to be toggled on and
    *         off at will).
    *
    * @return {Function}
+   *         the per source binder function
    */
   const createPerSrcBinder = (isOne) => {
     return function(first, second) {
@@ -139,7 +139,7 @@ const perSourceBehaviors = function() {
     /**
      * Disable per-source behaviors on this player.
      *
-     * @return {Boolean}
+     * @return {boolean}
      */
     disable: videojs.bind(this, function disable() {
       this.clearTimeout(srcChangeTimer);
@@ -151,7 +151,8 @@ const perSourceBehaviors = function() {
     /**
      * Whether per-source behaviors are disabled on this player.
      *
-     * @return {Boolean}
+     * @return {boolean}
+     *         if the per-source behaviors are disabled
      */
     disabled() {
       return disabled;
@@ -160,7 +161,8 @@ const perSourceBehaviors = function() {
     /**
      * Enable per-source behaviors on this player.
      *
-     * @return {Boolean}
+     * @return {boolean}
+     *         always returns true
      */
     enable() {
       disabled = false;
@@ -170,7 +172,8 @@ const perSourceBehaviors = function() {
     /**
      * Whether per-source behaviors are disabled on this player.
      *
-     * @return {Boolean}
+     * @return {boolean}
+     *         if the per-source behaviors are enabled
      */
     enabled() {
       return !disabled;
@@ -180,7 +183,8 @@ const perSourceBehaviors = function() {
      * Whether or not the source is "stable". This will return `true` if the
      * plugin feels that we may be about to change sources.
      *
-     * @return {Boolean}
+     * @return {boolean}
+     *         Whether the source is stable or not
      */
     isSrcStable() {
       return srcStable;
@@ -264,7 +268,7 @@ const perSourceBehaviors = function() {
     this.on(Html5.Events, addInterimEvent);
 
     srcChangeTimer = this.setTimeout(() => {
-      let currentSrc = this.currentSrc();
+      const currentSrc = this.currentSrc();
 
       srcStable = true;
       srcChangeTimer = null;
