@@ -2,7 +2,7 @@ import document from 'global/document';
 import QUnit from 'qunitjs';
 import sinon from 'sinon';
 import videojs from 'video.js';
-import plugin from '../src/js';
+import plugin from '../src/plugin';
 
 const triggerSeriesMaker = (player) => (series) => {
   series.forEach((item) => player.trigger(item));

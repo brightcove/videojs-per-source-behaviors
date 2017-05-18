@@ -3,7 +3,7 @@ import QUnit from 'qunitjs';
 import sinon from 'sinon';
 import tsmlj from 'tsmlj';
 import videojs from 'video.js';
-import plugin from '../src/js';
+import plugin from '../src/plugin';
 
 /**
  * Assertion for testing a subset of event data.
