@@ -1,3 +1,14 @@
+<a name="2.0.0"></a>
+# 2.0.0 (2017-05-19)
+
+### Chores
+
+* Update tooling using generator v5 prerelease. (#9) ([97d1e06](https://github.com/brightcove/videojs-per-source-behaviors/commit/97d1e06))
+
+### BREAKING CHANGES
+
+* Removed Bower support.
+
 CHANGELOG
 =========
 
