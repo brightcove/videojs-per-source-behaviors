@@ -9,12 +9,28 @@ import babel from 'rollup-plugin-babel';
 import json from 'rollup-plugin-json';
 
 export default {
-  moduleName: 'videojsPerSourceBehaviors',
-  entry: 'src/plugin.js',
-  external: ['video.js'],
-  globals: {
-    'video.js': 'videojs'
-  },
+  input: 'src/plugin.js',
+  output: [{
+    file: 'dist/videojs-per-source-behaviors.cjs.js',
+    format: 'cjs',
+    globals: {
+      'video.js': 'videojs'
+    },
+    name: 'videojsPerSourceBehaviors'
+  }, {
+    file: 'dist/videojs-per-source-behaviors.es.js',
+    format: 'es',
+    globals: {
+      'video.js': 'videojs'
+    },
+    name: 'videojsPerSourceBehaviors'
+  }],
+  external: [
+    'global',
+    'global/document',
+    'global/window',
+    'video.js'
+  ],
   legacy: true,
   plugins: [
     json(),
@@ -33,9 +49,5 @@ export default {
         'transform-object-assign'
       ]
     })
-  ],
-  targets: [
-    {dest: 'dist/videojs-per-source-behaviors.cjs.js', format: 'cjs'},
-    {dest: 'dist/videojs-per-source-behaviors.es.js', format: 'es'}
   ]
 };
