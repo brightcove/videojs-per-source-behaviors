@@ -10,14 +10,24 @@ import json from 'rollup-plugin-json';
 import resolve from 'rollup-plugin-node-resolve';
 
 export default {
-  moduleName: 'videojsPerSourceBehaviors',
-  entry: 'src/plugin.js',
-  dest: 'dist/videojs-per-source-behaviors.js',
-  format: 'umd',
-  external: ['video.js'],
-  globals: {
-    'video.js': 'videojs'
+  input: 'src/plugin.js',
+  output: {
+    file: 'dist/videojs-per-source-behaviors.js',
+    format: 'umd',
+    globals: {
+      'video.js': 'videojs',
+      'global': 'window',
+      'global/window': 'window',
+      'global/document': 'document'
+    },
+    name: 'videojsPerSourceBehaviors'
   },
+  external: [
+    'global',
+    'global/window',
+    'global/document',
+    'video.js'
+  ],
   legacy: true,
   plugins: [
     resolve({

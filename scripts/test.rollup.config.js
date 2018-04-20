@@ -10,22 +10,24 @@ import multiEntry from 'rollup-plugin-multi-entry';
 import resolve from 'rollup-plugin-node-resolve';
 
 export default {
-  moduleName: 'videojsPerSourceBehaviorsTests',
-  entry: 'test/**/*.test.js',
-  dest: 'test/dist/bundle.js',
-  format: 'iife',
+  input: 'test/**/*.test.js',
+  output: {
+    file: 'test/dist/bundle.js',
+    format: 'iife',
+    globals: {
+      'qunit': 'QUnit',
+      'qunitjs': 'QUnit',
+      'sinon': 'sinon',
+      'video.js': 'videojs'
+    },
+    name: 'videojsPerSourceBehaviorsTests'
+  },
   external: [
     'qunit',
     'qunitjs',
     'sinon',
     'video.js'
   ],
-  globals: {
-    'qunit': 'QUnit',
-    'qunitjs': 'QUnit',
-    'sinon': 'sinon',
-    'video.js': 'videojs'
-  },
   legacy: true,
   plugins: [
     multiEntry({
@@ -36,6 +38,7 @@ export default {
       main: true,
       jsnext: true
     }),
+    json(),
     commonjs({
       sourceMap: false
     }),
