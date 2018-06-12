@@ -86,7 +86,7 @@
     "node": ">=4.4.0"
   },
   "generator-videojs-plugin": {
-    "version": "6.0.5"
+    "version": "6.0.6"
   },
   "vjsstandard": {
     "ignore": [
