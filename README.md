@@ -1,31 +1,39 @@
+# videojs-per-source-behaviors
+
+[![Build Status](https://travis-ci.org/brightcove/videojs-per-source-behaviors.svg?branch=master)](https://travis-ci.org/brightcove/videojs-per-source-behaviors)
+[![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/videojs-per-source-behaviors.svg)](https://greenkeeper.io/)
+[![Slack Status](http://slack.videojs.com/badge.svg)](http://slack.videojs.com)
+
+[![NPM](https://nodei.co/npm/videojs-per-source-behaviors.png?downloads=true&downloadRank=true)](https://nodei.co/npm/videojs-per-source-behaviors/)
+
+A video.js plugin for enhancing a player with behaviors related to changing media sources.
+
+Maintenance Status: Stable
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
-**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
 
-- [videojs-per-source-behaviors](#videojs-per-source-behaviors)
-  - [Why?](#why)
-  - [Installation](#installation)
-  - [Usage](#usage)
-    - [`<script>` Tag](#script-tag)
-    - [Browserify](#browserify)
-    - [RequireJS/AMD](#requirejsamd)
-  - [API](#api)
-    - [`sourceunstable` Event](#sourceunstable-event)
-    - [`sourcechanged` Event](#sourcechanged-event)
-      - [Extra Event Data](#extra-event-data)
-    - [`player.onPerSrc()`](#playeronpersrc)
-    - [`player.onePerSrc()`](#playeronepersrc)
-    - [`player.perSourceBehaviors.disable()`/`player.perSourceBehaviors.enable()`](#playerpersourcebehaviorsdisableplayerpersourcebehaviorsenable)
-      - [What happens when per-source behaviors are disabled?](#what-happens-when-per-source-behaviors-are-disabled)
-    - [`player.perSourceBehaviors.disabled()`/`player.perSourceBehaviors.enabled()`](#playerpersourcebehaviorsdisabledplayerpersourcebehaviorsenabled)
-    - [`player.perSourceBehaviors.VERSION`](#playerpersourcebehaviorsversion)
-  - [License](#license)
+
+- [Why?](#why)
+- [Installation](#installation)
+- [Usage](#usage)
+  - [`<script>` Tag](#script-tag)
+  - [Browserify](#browserify)
+  - [RequireJS/AMD](#requirejsamd)
+- [API](#api)
+  - [`sourceunstable` Event](#sourceunstable-event)
+  - [`sourcechanged` Event](#sourcechanged-event)
+    - [Extra Event Data](#extra-event-data)
+  - [`player.onPerSrc()`](#playeronpersrc)
+  - [`player.onePerSrc()`](#playeronepersrc)
+  - [`player.perSourceBehaviors.disable()`/`player.perSourceBehaviors.enable()`](#playerpersourcebehaviorsdisableplayerpersourcebehaviorsenable)
+    - [What happens when per-source behaviors are disabled?](#what-happens-when-per-source-behaviors-are-disabled)
+  - [`player.perSourceBehaviors.disabled()`/`player.perSourceBehaviors.enabled()`](#playerpersourcebehaviorsdisabledplayerpersourcebehaviorsenabled)
+  - [`player.perSourceBehaviors.VERSION`](#playerpersourcebehaviorsversion)
+- [License](#license)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
-# videojs-per-source-behaviors
-
-A video.js plugin for enhancing a player with behaviors related to changing media sources.
 
 ## Why?
 
@@ -128,7 +136,7 @@ An object with the following properties is passed along with `sourcechanged` eve
 
 - `from`: The source URL _before_ the event.
 - `to`: The source URL _after_ the event (and currently).
-- `interimEvents`: An array of _all_ the events that occurred in the player between the event that triggered the check to the last event that fired before the call stack cleared. 
+- `interimEvents`: An array of _all_ the events that occurred in the player between the event that triggered the check to the last event that fired before the call stack cleared.
 
 Put another way, the object follows the following schema:
 
