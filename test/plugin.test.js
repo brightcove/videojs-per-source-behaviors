@@ -1,7 +1,6 @@
 import document from 'global/document';
 import QUnit from 'qunitjs';
 import sinon from 'sinon';
-import tsmlj from 'tsmlj';
 import videojs from 'video.js';
 import plugin from '../src/plugin';
 
@@ -10,7 +9,7 @@ import plugin from '../src/plugin';
  *
  * @param  {Object} data
  * @param  {Object} expected
- * @param  {String} [message]
+ * @param  {string} [message]
  */
 QUnit.assert.eventDataMatches = function(data, expected, message) {
   this.deepEqual({
@@ -149,9 +148,9 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('loadstart');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 1, tsmlj`
-    subsequent events with same source do not trigger "sourcechanged"
-  `);
+  assert.strictEqual(spy.callCount, 1,
+    'subsequent events with same source do not trigger "sourcechanged"'
+  );
 
   this.player.currentSrc = () => 'x-2.mp4';
   this.player.trigger('loadstart');
@@ -182,9 +181,9 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('loadstart');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 3, tsmlj`
-    with a changed, but repeated, source, got a "sourcechanged" event
-  `);
+  assert.strictEqual(spy.callCount, 3,
+    'with a changed, but repeated, source, got a "sourcechanged" event'
+  );
 
   assert.eventDataMatches(spy.getCall(2).args[1], {
     from: 'x-2.mp4',
@@ -209,10 +208,9 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('loadstart');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 4, tsmlj`
-    changing the source while a timeout was queued triggered a
-    "sourcechanged" event
-  `);
+  assert.strictEqual(spy.callCount, 4,
+    'changing the source while a timeout was queued triggered a "sourcechanged" event'
+  );
 
   assert.eventDataMatches(spy.getCall(3).args[1], {
     from: 'x-1.mp4',
@@ -239,10 +237,10 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('loadstart');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 4, tsmlj`
-    changing the source while per-source behaviors are disabled does NOT
-    trigger a "sourcechanged" event
-  `);
+  assert.strictEqual(spy.callCount, 4,
+    'changing the source while per-source behaviors are disabled does NOT ' +
+    'trigger a "sourcechanged" event'
+  );
 
   this.player.perSourceBehaviors.enable();
   this.player.trigger('play');
@@ -251,10 +249,10 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('playing');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 5, tsmlj`
-    re-enabling per-source behaviors will start triggering "sourcechanged"
-    events once again
-  `);
+  assert.strictEqual(spy.callCount, 5,
+    're-enabling per-source behaviors will start triggering "sourcechanged" ' +
+    'events once again'
+  );
 
   assert.eventDataMatches(spy.getCall(4).args[1], {
     from: 'x-2.mp4',
@@ -279,20 +277,20 @@ QUnit.test('"sourcechanged" event', function(assert) {
   this.player.trigger('loadstart');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 5, tsmlj`
-    changing the source with the vjs-ad-loading class on the player does NOT
-    trigger the "sourcechanged" event
-  `);
+  assert.strictEqual(spy.callCount, 5,
+    'changing the source with the vjs-ad-loading class on the player does NOT ' +
+    'trigger the "sourcechanged" event'
+  );
 
   this.player.removeClass('vjs-ad-loading');
   this.player.addClass('vjs-ad-playing');
   this.player.trigger('play');
   this.clock.tick(10);
 
-  assert.strictEqual(spy.callCount, 5, tsmlj`
-    changing the source with the vjs-ad-playing class on the player does NOT
-    trigger the "sourcechanged" event
-  `);
+  assert.strictEqual(spy.callCount, 5,
+    'changing the source with the vjs-ad-playing class on the player does NOT ' +
+    'trigger the "sourcechanged" event'
+  );
 });
 
 QUnit.test('onPerSrc() event binding', function(assert) {
@@ -303,41 +301,41 @@ QUnit.test('onPerSrc() event binding', function(assert) {
   this.player.trigger('foo');
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    an onPerSrc listener is called each time the event is triggered
-    while source is unchanged
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'an onPerSrc listener is called each time the event is triggered ' +
+    'while source is unchanged'
+  );
 
   this.player.currentSrc = () => 'x-2.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    an onPerSrc listener is not called if the event is triggered for
-    a new source
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'an onPerSrc listener is not called if the event is triggered for ' +
+    'a new source'
+  );
 
   this.player.currentSrc = () => 'x-1.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    restoring an old source, which had a listener does not trigger -
-    the binding is gone
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'restoring an old source, which had a listener does not trigger - ' +
+    'the binding is gone'
+  );
 
   this.player.currentSrc = () => {};
   this.player.onPerSrc('foo', spy);
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 3, tsmlj`
-    an onPerSrc listener does not care if there actually is a source
-  `);
+  assert.strictEqual(spy.callCount, 3,
+    'an onPerSrc listener does not care if there actually is a source'
+  );
 
   this.player.currentSrc = () => 'x-3.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 3, tsmlj`
-    but gaining a source still clears the previous listener
-  `);
+  assert.strictEqual(spy.callCount, 3,
+    'but gaining a source still clears the previous listener'
+  );
 
   // Bind a new onPerSrc listener for the latest source, then disable per-
   // source behaviors.
@@ -345,16 +343,16 @@ QUnit.test('onPerSrc() event binding', function(assert) {
   this.player.perSourceBehaviors.disable();
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 3, tsmlj`
-    when per-source behaviors are disabled, listeners are not triggered
-  `);
+  assert.strictEqual(spy.callCount, 3,
+    'when per-source behaviors are disabled, listeners are not triggered'
+  );
 
   this.player.perSourceBehaviors.enable();
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 4, tsmlj`
-    when per-source behaviors are re-enabled, listeners are triggered
-  `);
+  assert.strictEqual(spy.callCount, 4,
+    'when per-source behaviors are re-enabled, listeners are triggered'
+  );
 });
 
 QUnit.test('onePerSrc() event binding', function(assert) {
@@ -367,41 +365,41 @@ QUnit.test('onePerSrc() event binding', function(assert) {
   this.player.trigger('foo');
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 1, tsmlj`
-    an onePerSrc listener is called only once no matter how often the
-    event is triggered while source is unchanged
-  `);
+  assert.strictEqual(spy.callCount, 1,
+    'an onePerSrc listener is called only once no matter how often the ' +
+    'event is triggered while source is unchanged'
+  );
 
   this.player.currentSrc = () => 'x-2.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 1, tsmlj`
-    an onePerSrc listener is not called if the event is triggered for
-    a new source
-  `);
+  assert.strictEqual(spy.callCount, 1,
+    'an onePerSrc listener is not called if the event is triggered for' +
+    'a new source'
+  );
 
   this.player.currentSrc = () => 'x-1.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 1, tsmlj`
-    restoring an old source, which had a listener does not trigger -
-    the binding is gone
-  `);
+  assert.strictEqual(spy.callCount, 1,
+    'restoring an old source, which had a listener does not trigger - ' +
+    'the binding is gone'
+  );
 
   this.player.currentSrc = () => {};
   this.player.onePerSrc('foo', spy);
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    an onePerSrc listener does not care if there actually is a source
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'an onePerSrc listener does not care if there actually is a source'
+  );
 
   this.player.currentSrc = () => 'x-3.mp4';
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    but gaining a source still clears the previous listener
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'but gaining a source still clears the previous listener'
+  );
 
   // Bind a new onePerSrc listener for the latest source, then disable per-
   // source behaviors.
@@ -409,16 +407,16 @@ QUnit.test('onePerSrc() event binding', function(assert) {
   this.player.perSourceBehaviors.disable();
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 2, tsmlj`
-    when per-source behaviors are disabled, listeners are not triggered
-  `);
+  assert.strictEqual(spy.callCount, 2,
+    'when per-source behaviors are disabled, listeners are not triggered'
+  );
 
   this.player.perSourceBehaviors.enable();
   this.player.trigger('foo');
 
-  assert.strictEqual(spy.callCount, 3, tsmlj`
-    when per-source behaviors are re-enabled, listeners are triggered
-  `);
+  assert.strictEqual(spy.callCount, 3,
+    'when per-source behaviors are re-enabled, listeners are triggered'
+  );
 });
 
 QUnit.test('"sourcechanged" removes per-source listeners', function(assert) {
