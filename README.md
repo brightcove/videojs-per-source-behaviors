@@ -1,3 +1,28 @@
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+**Table of Contents**  *generated with [DocToc](https://github.com/thlorenz/doctoc)*
+
+- [videojs-per-source-behaviors](#videojs-per-source-behaviors)
+  - [Why?](#why)
+  - [Installation](#installation)
+  - [Usage](#usage)
+    - [`<script>` Tag](#script-tag)
+    - [Browserify](#browserify)
+    - [RequireJS/AMD](#requirejsamd)
+  - [API](#api)
+    - [`sourceunstable` Event](#sourceunstable-event)
+    - [`sourcechanged` Event](#sourcechanged-event)
+      - [Extra Event Data](#extra-event-data)
+    - [`player.onPerSrc()`](#playeronpersrc)
+    - [`player.onePerSrc()`](#playeronepersrc)
+    - [`player.perSourceBehaviors.disable()`/`player.perSourceBehaviors.enable()`](#playerpersourcebehaviorsdisableplayerpersourcebehaviorsenable)
+      - [What happens when per-source behaviors are disabled?](#what-happens-when-per-source-behaviors-are-disabled)
+    - [`player.perSourceBehaviors.disabled()`/`player.perSourceBehaviors.enabled()`](#playerpersourcebehaviorsdisabledplayerpersourcebehaviorsenabled)
+    - [`player.perSourceBehaviors.VERSION`](#playerpersourcebehaviorsversion)
+  - [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
+
 # videojs-per-source-behaviors
 
 A video.js plugin for enhancing a player with behaviors related to changing media sources.
