@@ -1,5 +1,7 @@
 # videojs-per-source-behaviors
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/brightcove/videojs-per-source-behaviors.svg)](https://greenkeeper.io/)
+
 A video.js plugin for enhancing a player with behaviors related to changing media sources.
 
 ## Why?
