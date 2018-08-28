@@ -9,16 +9,8 @@
 
 * Removed Bower support.
 
-CHANGELOG
-=========
-
-## HEAD (Unreleased)
-_(none)_
-
---------------------
-
 ## 1.1.4 (2017-04-27)
-_(none)_
+* add `"ads-ready?"` as a known state
 
 ## 1.1.3 (2017-03-23)
 * Remove `"ads-ready"` from list of considered ad states.

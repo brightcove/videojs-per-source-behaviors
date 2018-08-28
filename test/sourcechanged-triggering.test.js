@@ -59,7 +59,7 @@ QUnit.module('sourcechanged matrix', {
 });
 
 QUnit.test('previous-null, current-null, no-ads', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -82,7 +82,7 @@ QUnit.test('previous-null, current-null, no-ads', function(assert) {
 });
 
 QUnit.test('previous-null, current-foo.mp4, no-ads', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -107,7 +107,7 @@ QUnit.test('previous-null, current-foo.mp4, no-ads', function(assert) {
 });
 
 QUnit.test('previous-null, current-ad.mp4, ads-preroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -134,7 +134,7 @@ QUnit.test('previous-null, current-ad.mp4, ads-preroll', function(assert) {
 });
 
 QUnit.test('previous-null, current-ad.mp4, ads-postroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -161,7 +161,7 @@ QUnit.test('previous-null, current-ad.mp4, ads-postroll', function(assert) {
 });
 
 QUnit.test('previous-null, current-ad.mp4, ads-ad-playback', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -188,7 +188,7 @@ QUnit.test('previous-null, current-ad.mp4, ads-ad-playback', function(assert) {
 });
 
 QUnit.test('previous-null, current-foo.mp4, no-ads (ads-ready)', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -215,7 +215,7 @@ QUnit.test('previous-null, current-foo.mp4, no-ads (ads-ready)', function(assert
 });
 
 QUnit.test('previous-foo.mp4, current-foo.mp4, no-ads', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -254,7 +254,7 @@ QUnit.test('previous-foo.mp4, current-foo.mp4, no-ads', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-foo.mp4, ads-preroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -294,7 +294,7 @@ QUnit.test('previous-foo.mp4, current-foo.mp4, ads-preroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-foo.mp4, ads-postroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -334,7 +334,7 @@ QUnit.test('previous-foo.mp4, current-foo.mp4, ads-postroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-foo.mp4, ads-ad-playback', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -374,7 +374,7 @@ QUnit.test('previous-foo.mp4, current-foo.mp4, ads-ad-playback', function(assert
 });
 
 QUnit.test('previous-foo.mp4, current-foo.mp4, no-ads (ads-ready)', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -414,7 +414,7 @@ QUnit.test('previous-foo.mp4, current-foo.mp4, no-ads (ads-ready)', function(ass
 });
 
 QUnit.test('previous-foo.mp4, current-bar.mp4, no-ads', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -453,7 +453,7 @@ QUnit.test('previous-foo.mp4, current-bar.mp4, no-ads', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-bar.mp4, ads-preroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -493,7 +493,7 @@ QUnit.test('previous-foo.mp4, current-bar.mp4, ads-preroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-bar.mp4, ads-postroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -533,7 +533,7 @@ QUnit.test('previous-foo.mp4, current-bar.mp4, ads-postroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-bar.mp4, ads-ad-playback', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -573,7 +573,7 @@ QUnit.test('previous-foo.mp4, current-bar.mp4, ads-ad-playback', function(assert
 });
 
 QUnit.test('previous-foo.mp4, current-bar.mp4, no-ads (ads-ready)', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -613,7 +613,7 @@ QUnit.test('previous-foo.mp4, current-bar.mp4, no-ads (ads-ready)', function(ass
 });
 
 QUnit.test('previous-foo.mp4, current-ad.mp4, ads-preroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -653,7 +653,7 @@ QUnit.test('previous-foo.mp4, current-ad.mp4, ads-preroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-ad.mp4, ads-postroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -693,7 +693,7 @@ QUnit.test('previous-foo.mp4, current-ad.mp4, ads-postroll', function(assert) {
 });
 
 QUnit.test('previous-foo.mp4, current-ad.mp4, ads-ad-playback', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -733,7 +733,7 @@ QUnit.test('previous-foo.mp4, current-ad.mp4, ads-ad-playback', function(assert)
 });
 
 QUnit.test('previous-foo.mp4, current-ad.mp4, no-ads (ads-ready)', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -773,7 +773,7 @@ QUnit.test('previous-foo.mp4, current-ad.mp4, no-ads (ads-ready)', function(asse
 });
 
 QUnit.test('previous-ad.mp4, current-foo.mp4, ads-preroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -813,7 +813,7 @@ QUnit.test('previous-ad.mp4, current-foo.mp4, ads-preroll', function(assert) {
 });
 
 QUnit.test('previous-ad.mp4, current-foo.mp4, ads-postroll', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -853,7 +853,7 @@ QUnit.test('previous-ad.mp4, current-foo.mp4, ads-postroll', function(assert) {
 });
 
 QUnit.test('previous-ad.mp4, current-foo.mp4, ads-ad-playback', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
@@ -893,7 +893,7 @@ QUnit.test('previous-ad.mp4, current-foo.mp4, ads-ad-playback', function(assert)
 });
 
 QUnit.test('previous-ad.mp4, current-foo.mp4, no-ads (ads-ready)', function(assert) {
-  const spy = sinon.spy();
+  const spy = sinon.stub();
 
   this.player.on('sourcechanged', spy);
 
