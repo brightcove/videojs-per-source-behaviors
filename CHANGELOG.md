@@ -1,3 +1,21 @@
+<a name="2.0.1"></a>
+## [2.0.1](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.0.0...v2.0.1) (2018-09-18)
+
+### Bug Fixes
+
+* Remove the postinstall script to prevent install issues (#17) ([202bfb1](https://github.com/brightcove/videojs-per-source-behaviors/commit/202bfb1)), closes [#17](https://github.com/brightcove/videojs-per-source-behaviors/issues/17)
+* report version on plugin (#20) ([f535b07](https://github.com/brightcove/videojs-per-source-behaviors/commit/f535b07)), closes [#20](https://github.com/brightcove/videojs-per-source-behaviors/issues/20)
+
+### Chores
+
+* update generator to v7.1.1 ([679a980](https://github.com/brightcove/videojs-per-source-behaviors/commit/679a980))
+* **package:** Update dependencies (#14) ([2bba1b3](https://github.com/brightcove/videojs-per-source-behaviors/commit/2bba1b3)), closes [#14](https://github.com/brightcove/videojs-per-source-behaviors/issues/14)
+* update to generator-videojs-plugin[@7](https://github.com/7).2.0 ([02c5eb1](https://github.com/brightcove/videojs-per-source-behaviors/commit/02c5eb1))
+* Update to use plugin generator v7.0.2 ([ad31b02](https://github.com/brightcove/videojs-per-source-behaviors/commit/ad31b02))
+* **package:** update videojs-generate-karma-config to version 3.0.0 (#16) ([1d81b2d](https://github.com/brightcove/videojs-per-source-behaviors/commit/1d81b2d)), closes [#16](https://github.com/brightcove/videojs-per-source-behaviors/issues/16)
+* **package:** update videojs-generate-rollup-config to version 2.1.0 (#15) ([eef3991](https://github.com/brightcove/videojs-per-source-behaviors/commit/eef3991)), closes [#15](https://github.com/brightcove/videojs-per-source-behaviors/issues/15)
+* **package:** update videojs-generate-rollup-config to version 2.2.0 (#18) ([1129e27](https://github.com/brightcove/videojs-per-source-behaviors/commit/1129e27)), closes [#18](https://github.com/brightcove/videojs-per-source-behaviors/issues/18)
+
 <a name="2.0.0"></a>
 # 2.0.0 (2017-05-19)
 
