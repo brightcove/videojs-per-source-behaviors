@@ -1,4 +1,5 @@
 import videojs from 'video.js';
+import {version as VERSION} from '../package.json';
 
 const Html5 = videojs.getTech('Html5');
 
@@ -191,7 +192,7 @@ const perSourceBehaviors = function() {
       return srcStable;
     },
 
-    VERSION: '__VERSION__'
+    VERSION
   };
 
   /**
@@ -294,7 +295,8 @@ const perSourceBehaviors = function() {
   });
 };
 
+perSourceBehaviors.VERSION = VERSION;
+
 registerPlugin('perSourceBehaviors', perSourceBehaviors);
-perSourceBehaviors.VERSION = '__VERSION__';
 
 export default perSourceBehaviors;
