@@ -13,7 +13,7 @@ const triggerSeriesMaker = (player) => (series) => {
  *
  * @param  {Object} data
  * @param  {Object} expected
- * @param  {String} [message]
+ * @param  {string} [message]
  */
 QUnit.assert.eventDataMatches = function(data, expected, message) {
   this.deepEqual({
