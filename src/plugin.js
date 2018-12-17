@@ -33,7 +33,8 @@ const UNSTABLE_EVENTS = [
 ];
 
 /**
- * These are the ad loading and playback states we care about.
+ * These are the ad loading and playback states we care about from
+ * contrib-ads 5.
  *
  * @type {Array}
  */
@@ -45,6 +46,57 @@ const AD_STATES = [
 ];
 
 /**
+ * Whether or not a string represents an "ad state".
+ *
+ * @param  {string} s
+ *         The string to check
+ *
+ * @return {boolean}
+ *         If the string is an ad state
+ */
+const isAdState = (s) => AD_STATES.indexOf(s) > -1;
+
+/**
+ * Determine whether or not a player is using contrib-ads 6+.
+ *
+ * @param  {Player} p
+ *         The player
+ *
+ * @return {boolean}
+ *         if the player is using contrib-ads 6+
+ */
+const usingAds6Plus = (p) => p.usingPlugin('ads') && typeof p.ads.inAdBreak === 'function';
+
+/**
+ * Whether or not the player should ignore an event due to ad states.
+ *
+ * @param  {Player} p
+ *         The player
+ *
+ * @param  {Event} e
+ *         An event object
+ *
+ * @return {boolean}
+ *         If the player is in an ad state
+ */
+const ignoreEvent = (p, e) => {
+
+  // No ads, no ad states to ignore!
+  if (!p.usingPlugin('ads')) {
+    return false;
+  }
+
+  // In contrib-ads 6+ we only care about non-loadstart events because
+  // loadstart events _may_ happen during ad mode.
+  if (usingAds6Plus(p)) {
+    return p.ads.isInAdMode() && e.type !== 'loadstart';
+  }
+
+  // contrib-ads 5+
+  return isAdState(p.ads.state);
+};
+
+/**
  * Applies per-source behaviors to a video.js Player object.
  */
 const perSourceBehaviors = function() {
@@ -53,17 +105,6 @@ const perSourceBehaviors = function() {
   let disabled = false;
   let srcChangeTimer;
   let srcStable = true;
-
-  /**
-   * Whether or not the player is in an ad state. Ideally, this function would
-   * not need to exist, but hooks provided by contrib-ads are not sufficient to
-   * cover all conditions at this time.
-   *
-   * @return {boolean}
-   *         whether the player is in an ad state or not
-   */
-  const isInAdPlayback = () =>
-    !!this.ads && typeof this.ads === 'object' && AD_STATES.indexOf(this.ads.state) > -1;
 
   /**
    * Creates an event binder function of a given type.
@@ -241,7 +282,7 @@ const perSourceBehaviors = function() {
     if (
       this.perSourceBehaviors.disabled() ||
       srcChangeTimer ||
-      isInAdPlayback(this)
+      ignoreEvent(this, e)
     ) {
       return;
     }

@@ -46,6 +46,13 @@ QUnit.module('sourcechanged matrix', {
     this.video = document.createElement('video');
     this.fixture.appendChild(this.video);
     this.player = videojs(this.video);
+
+    // Mock the usingPlugin method in a way that makes it easier to override
+    // the `ads` property of the player without losing plugin detection
+    // capabilities.
+    this.player.usingPlugin = (name) =>
+      name === 'ads' ? !!this.player.ads : videojs.getComponent('Player').prototype.usingPlugin.call(this.player, name);
+
     this.player.perSourceBehaviors();
 
     // Tick forward enough to ready the player.
@@ -929,5 +936,173 @@ QUnit.test('previous-ad.mp4, current-foo.mp4, no-ads (ads-ready)', function(asse
     spy.callCount,
     1,
     'previous-foo.mp4, current-ad.mp4, no-ads (ads-ready), sourcechanged event'
+  );
+});
+
+QUnit.test('previous-null, current-foo.mp4, contrib-ads-6 isInAdMode => false (ignores ads state)', function(assert) {
+  const spy = sinon.stub();
+
+  this.player.on('sourcechanged', spy);
+
+  const triggerSeries = triggerSeriesMaker(this.player);
+
+  this.player.ads = {
+
+    // Pick a state at odds with what is reported from isInAdMode
+    state: 'preroll?',
+    inAdBreak() {},
+    isInAdMode() {
+      return false;
+    }
+  };
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  assert.deepEqual(
+    spy.callCount,
+    1,
+    'previous-null, current-foo.mp4, contrib-ads-6 isInAdMode => false (ignores ads state), sourcechanged event'
+  );
+});
+
+QUnit.test('previous-foo.mp4, current-foo.mp4, contrib-ads-6 isInAdMode => false (ignores ads state)', function(assert) {
+  const spy = sinon.stub();
+
+  this.player.on('sourcechanged', spy);
+
+  const triggerSeries = triggerSeriesMaker(this.player);
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  // we don't care about the first video, only the current one
+  spy.reset();
+
+  this.player.ads = {
+
+    // Pick a state at odds with what is reported from isInAdMode
+    ads: 'preroll?',
+    inAdBreak() {},
+    isInAdMode() {
+      return false;
+    }
+  };
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  assert.deepEqual(
+    spy.callCount,
+    0,
+    'previous-foo.mp4, current-foo.mp4, contrib-ads-6 isInAdMode => false (ignores ads state), sourcechanged event'
+  );
+});
+
+QUnit.test('previous-null, current-foo.mp4, contrib-ads-6 isInAdMode => true (ignores ads state)', function(assert) {
+  const spy = sinon.stub();
+
+  this.player.on('sourcechanged', spy);
+
+  const triggerSeries = triggerSeriesMaker(this.player);
+
+  this.player.ads = {
+
+    // Pick a state at odds with what is reported from isInAdMode
+    state: 'content-playback',
+    inAdBreak() {},
+    isInAdMode() {
+      return true;
+    }
+  };
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  assert.deepEqual(
+    spy.callCount,
+    1,
+    'previous-null, current-foo.mp4, contrib-ads-6 isInAdMode => true (ignores ads state), sourcechanged event'
+  );
+});
+
+QUnit.test('previous-foo.mp4, current-foo.mp4, contrib-ads-6 isInAdMode => true (ignores ads state)', function(assert) {
+  const spy = sinon.stub();
+
+  this.player.on('sourcechanged', spy);
+
+  const triggerSeries = triggerSeriesMaker(this.player);
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  // we don't care about the first video, only the current one
+  spy.reset();
+
+  this.player.ads = {
+
+    // Pick a state at odds with what is reported from isInAdMode
+    state: 'content-playback',
+    inAdBreak() {},
+    isInAdMode() {
+      return true;
+    }
+  };
+
+  this.player.currentSrc = () => 'foo.mp4';
+
+  triggerSeries([
+    'loadstart',
+    'canplay',
+    'play',
+    'playing'
+  ]);
+
+  this.clock.tick(10);
+
+  assert.deepEqual(
+    spy.callCount,
+    0,
+    'previous-foo.mp4, current-foo.mp4, contrib-ads-6 isInAdMode => true (ignores ads state), sourcechanged event'
   );
 });
