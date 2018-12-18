@@ -1,3 +1,10 @@
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.0.1...v2.1.0) (2018-12-18)
+
+### Features
+
+* Add support for contrib-ads 6 or 5. (#40) ([e3a0d62](https://github.com/brightcove/videojs-per-source-behaviors/commit/e3a0d62)), closes [#40](https://github.com/brightcove/videojs-per-source-behaviors/issues/40)
+
 <a name="2.0.1"></a>
 ## [2.0.1](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.0.0...v2.0.1) (2018-09-18)
 
