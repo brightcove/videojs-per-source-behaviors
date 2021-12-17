@@ -1,6 +1,6 @@
 {
   "name": "videojs-per-source-behaviors",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "description": "A Video.js plugin for enhancing a player with behaviors related to changing media sources.",
   "author": "Brightcove, Inc.",
   "license": "Apache-2.0",

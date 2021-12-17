@@ -1,3 +1,17 @@
+<a name="3.0.0"></a>
+# [3.0.0](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.1.0...v3.0.0) (2021-12-17)
+
+### Chores
+
+* package-lock updates (#50) ([68f1976](https://github.com/brightcove/videojs-per-source-behaviors/commit/68f1976)), closes [#50](https://github.com/brightcove/videojs-per-source-behaviors/issues/50)
+* skip vjsverify es check (#49) ([4d65c8c](https://github.com/brightcove/videojs-per-source-behaviors/commit/4d65c8c)), closes [#49](https://github.com/brightcove/videojs-per-source-behaviors/issues/49)
+* Update generate-rollup-config to drop older browser support (#47) ([fa7a13f](https://github.com/brightcove/videojs-per-source-behaviors/commit/fa7a13f)), closes [#47](https://github.com/brightcove/videojs-per-source-behaviors/issues/47)
+
+
+### BREAKING CHANGES
+
+* This removes support for some older browsers like IE 11
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.0.1...v2.1.0) (2018-12-18)
 
