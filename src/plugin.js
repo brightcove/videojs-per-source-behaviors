@@ -96,6 +96,8 @@ const ignoreEvent = (p, e) => {
   return isAdState(p.ads.state);
 };
 
+let psbGuid = 0;
+
 /**
  * Applies per-source behaviors to a video.js Player object.
  */
@@ -135,10 +137,9 @@ const perSourceBehaviors = function() {
 
       // Make sure we bind here so that a GUID is set on the original listener
       // and that it is bound to the proper context.
-      const originalListener = videojs.bind(
-        isTargetPlayer ? this : first,
-        arguments[arguments.length - 1]
-      );
+      const passedListener = arguments[arguments.length - 1];
+      const listenerContext = isTargetPlayer ? this : first;
+      const originalListener = passedListener.bind(listenerContext);
 
       // The wrapped listener `subargs` are the arguments passed to the original
       // listener (i.e. the Event object and an additional data hash).
@@ -162,7 +163,15 @@ const perSourceBehaviors = function() {
       // Make sure the wrapped listener and the original listener share a GUID,
       // so that video.js properly removes event bindings when `off()` is passed
       // the original listener!
-      wrappedListener.guid = originalListener.guid;
+      //
+      // This property is used internally by Video.js for tracking bound
+      // listeners in its event system. Normally, Video.js creates this `guid`
+      // through its `bind` method, but that method is deprecated in public
+      // interfaces.
+      //
+      // Basically, this allows us to avoid deprecation warnings from calling
+      // `videojs.bind` when used with Video.js 8.
+      wrappedListener.guid = originalListener.guid = passedListener.guid = `psb-${++psbGuid}`;
 
       // If we are targeting a different object from the player, we need to include
       // the second argument.
@@ -184,12 +193,12 @@ const perSourceBehaviors = function() {
      *
      * @return {boolean}
      */
-    disable: videojs.bind(this, function disable() {
+    disable: (function disable() {
       this.clearTimeout(srcChangeTimer);
       srcChangeTimer = null;
       disabled = true;
       return disabled;
-    }),
+    }).bind(this),
 
     /**
      * Whether per-source behaviors are disabled on this player.
