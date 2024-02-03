@@ -369,6 +369,52 @@ QUnit.test('onPerSrc() event binding', function(assert) {
   );
 });
 
+QUnit.test('removing per-source listeners does not remove other per-source listeners OR normal listeners', function(assert) {
+  const onSpy = sinon.spy();
+  const onPerSrcSpyA = sinon.spy();
+  const onPerSrcSpyB = sinon.spy();
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.on('foo', onSpy);
+  this.player.onPerSrc('foo', onPerSrcSpyA);
+  this.player.onPerSrc('foo', onPerSrcSpyB);
+  this.player.trigger('foo');
+
+  assert.strictEqual(onSpy.callCount, 1, 'the "on" listener was called once');
+  assert.strictEqual(onPerSrcSpyA.callCount, 1, 'the first "onPerSrc" listener was called once');
+  assert.strictEqual(onPerSrcSpyB.callCount, 1, 'the second "onPerSrc" listener was called once');
+
+  this.player.off('foo', onPerSrcSpyA);
+  this.player.trigger('foo');
+
+  assert.strictEqual(onSpy.callCount, 2, 'the "on" listener was called once');
+  assert.strictEqual(onPerSrcSpyA.callCount, 1, 'the first "onPerSrc" listener was NOT called');
+  assert.strictEqual(onPerSrcSpyB.callCount, 2, 'the second "onPerSrc" listener was called once');
+});
+
+QUnit.test('removing normal listeners does not remove per-source listeners OR other normal listeners', function(assert) {
+  const onSpyA = sinon.spy();
+  const onSpyB = sinon.spy();
+  const onPerSrcSpy = sinon.spy();
+
+  this.player.currentSrc = () => 'x-1.mp4';
+  this.player.on('foo', onSpyA);
+  this.player.on('foo', onSpyB);
+  this.player.onPerSrc('foo', onPerSrcSpy);
+  this.player.trigger('foo');
+
+  assert.strictEqual(onSpyA.callCount, 1, 'the first "on" listener was called once');
+  assert.strictEqual(onSpyB.callCount, 1, 'the second "on" listener was called once');
+  assert.strictEqual(onPerSrcSpy.callCount, 1, 'the "onPerSrc" listener was called once');
+
+  this.player.off('foo', onSpyB);
+  this.player.trigger('foo');
+
+  assert.strictEqual(onSpyA.callCount, 2, 'the first "on" listener was called again');
+  assert.strictEqual(onSpyB.callCount, 1, 'the second "on" listener was NOT called');
+  assert.strictEqual(onPerSrcSpy.callCount, 2, 'the "onPerSrc" listener was called again');
+});
+
 QUnit.test('onePerSrc() event binding', function(assert) {
   const spy = sinon.spy();
 
