@@ -1,3 +1,11 @@
+<a name="3.0.1"></a>
+## [3.0.1](https://github.com/brightcove/videojs-per-source-behaviors/compare/v3.0.0...v3.0.1) (2024-02-03)
+
+### Bug Fixes
+
+* clear deprecation warning when using with Video.js 8 (#51) ([a3247b6](https://github.com/brightcove/videojs-per-source-behaviors/commit/a3247b6)), closes [#51](https://github.com/brightcove/videojs-per-source-behaviors/issues/51)
+* **test:** remove FirefoxHeadless ([7f1533d](https://github.com/brightcove/videojs-per-source-behaviors/commit/7f1533d))
+
 <a name="3.0.0"></a>
 # [3.0.0](https://github.com/brightcove/videojs-per-source-behaviors/compare/v2.1.0...v3.0.0) (2021-12-17)
 
